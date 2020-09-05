@@ -3,14 +3,19 @@ const app = express();
 const bodyParser = require('body-parser');
 const connection = require("./database/database")
 const Pergunta = require("./models/Pergunta");
+const Resposta = require("./models/Resposta");
 
 
 
-//dabase 
+//dabase
 connection.authenticate().then(() => {
+
     console.log("Sucesso ao conectar");
+
 }).catch(mgsErro => {
+
     console.log('erro ao conectar' + mgsErro);
+
 });
 
 
@@ -56,7 +61,7 @@ app.post('/salvarpergunta', (req, res) => {
     });
 });
 
-app.get("/pergunta:", (req, res) => {
+app.get("/pergunta/:id", (req, res) => {
 
     var id = req.params.id;
     Pergunta.findOne({
@@ -66,11 +71,39 @@ app.get("/pergunta:", (req, res) => {
     }).then(pergunta => {
         if (pergunta != undefined) { //pergunta achada
 
-        } else {
+            //buscar todas respostas desta pergunta
+            Resposta.findAll({
+                where: {
+                    perguntaId: pergunta.id
+                },
+                order: [
+                    ['id', 'DESC']
+                ]
+            }).then(respostas => {
+                res.render("pergunta", {
+                    pergunta: pergunta, //passando dados entre paginas
+                    respostas: respostas //pasando resposta na view
+                });
+            });
 
+
+        } else { //pergunta nao encontrada
+            res.redirect("/")
         }
     });
 
+});
+
+app.post("/responder", (req, res) => {
+    var corpo = req.body.corpo;
+    var perguntaId = req.body.perguntaId;
+
+    Resposta.create({
+        corpo: corpo,
+        perguntaId: perguntaId
+    }).then(() => {
+        res.redirect("/pergunta/" + perguntaId);
+    });
 });
 
 //fim rotas

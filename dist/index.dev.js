@@ -8,7 +8,9 @@ var bodyParser = require('body-parser');
 
 var connection = require("./database/database");
 
-var Pergunta = require("./models/Pergunta"); //dabase 
+var Pergunta = require("./models/Pergunta");
+
+var Resposta = require("./models/Resposta"); //dabase
 
 
 connection.authenticate().then(function () {
@@ -49,15 +51,43 @@ app.post('/salvarpergunta', function (req, res) {
     res.redirect("/");
   });
 });
-app.get("/pergunta:", function (req, res) {
+app.get("/pergunta/:id", function (req, res) {
   var id = req.params.id;
   Pergunta.findOne({
     where: {
       id: id
     }
   }).then(function (pergunta) {
-    if (pergunta != undefined) {//pergunta achada
-    } else {}
+    if (pergunta != undefined) {
+      //pergunta achada
+      //buscar todas respostas desta pergunta
+      Resposta.findAll({
+        where: {
+          perguntaId: pergunta.id
+        },
+        order: [['id', 'DESC']]
+      }).then(function (respostas) {
+        res.render("pergunta", {
+          pergunta: pergunta,
+          //passando dados entre paginas
+          respostas: respostas //pasando resposta na view
+
+        });
+      });
+    } else {
+      //pergunta nao encontrada
+      res.redirect("/");
+    }
+  });
+});
+app.post("/responder", function (req, res) {
+  var corpo = req.body.corpo;
+  var perguntaId = req.body.perguntaId;
+  Resposta.create({
+    corpo: corpo,
+    perguntaId: perguntaId
+  }).then(function () {
+    res.redirect("/pergunta/" + perguntaId);
   });
 }); //fim rotas
 

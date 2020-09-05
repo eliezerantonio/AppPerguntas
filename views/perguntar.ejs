@@ -1,47 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <title>Guia Perguntas</title>
-</head>
+<%- include ('partials/header.ejs') %>
 
 <body>
-
-    <div class="container">
-
-        <div class="card">
-            <div class="card-header">
-                <h3>Realizar pergunta</h3>
-            </div>
-            <div class="card-body">
-                <fom>
-                    <label>Título</label>
-                    <input type="text" placeholder="Título" class="form-control">
-                    <br><label>Descrição</label>
-                    <textarea placeholder="Descreva sua pergunra aqui" class="form-control"></textarea>
-                    <br>
-                    <button class="btn btn-primary">Perguntar</button>
-                </fom>
-            </div>
-        </div>
-
-
+  <%- include ('partials/navbar.ejs') %>
+  <div class="container">
+    <div class="card" id="formulario-pergunta">
+      <div class="card-header">
+        <h3>Realizar pergunta</h3>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="/salvarpergunta">
+          <label>Título</label>
+          <input
+            type="text"
+            placeholder="Título"
+            name="titulo"
+            class="form-control"
+          />
+          <br /><label>Descrição</label>
+          <textarea
+            placeholder="Descreva sua pergunra aqui"
+            name="descricao"
+            class="form-control"
+          ></textarea>
+          <br />
+          <button class="btn btn-primary">Perguntar</button>
+        </form>
+      </div>
     </div>
-
+  </div>
 </body>
-<!-- CSS only -->
 
-<!-- JS, Popper.js, and jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-</script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
-</script>
-<script src="/js/bootstrap.min.js"></script>
-
-</html>
+<%- include ('partials/footer.ejs') %>
